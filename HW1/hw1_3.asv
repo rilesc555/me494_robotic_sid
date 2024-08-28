@@ -1,0 +1,43 @@
+clearvars -global;
+
+D = 0.1;
+N = 1000;
+
+u1 = linspace(-3,3,N);
+u2 = linspace(2,5,N);
+iters = 100000;
+
+norm = makedist("Normal");
+
+params1 = zeros(iters,2);
+params2 = zeros(iters,2);
+
+for i = 1:(iters)
+    n_t = random(norm);
+
+    z1 = n_t + D*u1';
+    X1 = [ones(N,1), u1'];
+    theta_hat1 = (X1' * X1) \ (X1' * z1);
+    params1(i,:) = theta_hat1';
+    
+    n_t = random(norm);
+    z2 = n_t + D*u2';
+    X2 = [ones(N,1), u2'];
+    theta_hat2 = (X2' * X2) \ (X2' * z2);
+    params2(i,:) = theta_hat2';
+end
+
+z1_hat = X1 * theta_hat1;
+z2_hat = X2 * theta_hat2;
+
+
+figure(2);
+hold on;
+y1 = params1(:,2);
+x1 = params1(:,1);
+scatter(x1,y1);
+
+x2 = params2(:,1)
+hold off;
+
+
